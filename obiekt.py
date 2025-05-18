@@ -1,6 +1,11 @@
 from vpython import *
 import numpy as np
 
+canprint = False #Check if you can start printing figures
+ifcenter = False #Check for alignment of the printer head
+figurechoice = 0 #Check which figure
+i = 0
+
 #Simulation captions
 scene.caption = """Right button drag or Ctrl-drag to rotate "camera" to view scene.
 To zoom, drag with middle button or Alt/Option depressed, or use scroll wheel.
@@ -10,9 +15,9 @@ Shift-drag to pan left/right and up/down.
 Make horizontal movement with arrow keys
 Make vertical movement with "w" and "s"
 """
-text(pos=vec(0, 0, 6), text='NORTH', align='center', color=color.white, up=vec(0,0,1), axis=vector(-1,0,0))
+text(pos=vec(0, 0, 6), text='NORTH', align='ifcenter', color=color.white, up=vec(0,0,1), axis=vector(-1,0,0))
 
-#Printer support visualisation
+#Printer's support visualisation
 main_plane = box(pos=vec(0, 0, 0), length=10, height=0.1, width=10, color=color.white)
 
 sw_support = box(pos=vec(-4.9, 2.5, -4.9), length=0.2, height=5, width=0.2, color=color.orange)
@@ -25,7 +30,7 @@ s_support = box(pos=vec(-4.9, 5, 0), length=0.2, height=0.2, width=10, color=col
 w_support = box(pos=vec(0, 5, 4.9), length=10, height=0.2, width=0.2, color=color.orange)
 e_support = box(pos=vec(0, 5, -4.9), length=10, height=0.2, width=0.2, color=color.orange)
 
-#Printer moving elements visualisation
+#Printer's moving elements visualisation
 support_z = box(pos=vec(0, 5, 0), length=9.6, height=0.2, width=0.2, color=color.blue)
 support_x = box(pos=vec(0, 5, 0), length=0.2, height=0.2, width=9.6, color=color.blue)
 
@@ -47,20 +52,42 @@ def clearfun():
                 head.clear_trail()
 
 def colorfun(evt):
-        if evt.text == 'red':
+        if evt.text == 'Red':
                 head.trail_color=color.red
-        elif evt.text == 'green':
+        elif evt.text == 'Green':
                 head.trail_color=color.green
-        elif evt.text == 'blue':
+        elif evt.text == 'Blue':
                 head.trail_color=color.blue
 
 customprint = button (bind = printfun, text = "Start printing")
 
 clearprint = button (bind = clearfun, text = "Clear objects")
 
-redbutton = radio(bind=colorfun, text='red', name='colors', checked=True)
-greenbutton = radio(bind=colorfun, text='green', name='colors')
-bluebutton = radio(bind=colorfun, text='blue', name='colors')
+redbutton = radio(bind=colorfun, text='Red', name='colors', checked=True)
+greenbutton = radio(bind=colorfun, text='Green', name='colors')
+bluebutton = radio(bind=colorfun, text='Blue', name='colors')
+
+wtext(text="\n\n")      
+
+#Preset figure choice and print
+def whichfigure(evt):
+        global figurechoice
+        if evt.text == 'Rectangle':
+                figurechoice = 0
+        if evt.text == 'Spring':
+                figurechoice = 0
+        if evt.text == 'Ball':
+                figurechoice = 0
+
+def buildorder():
+        global ifcenter
+        ifcenter = True
+        
+rectangle = radio(bind=whichfigure, text='Rectangle', name='figures', checked=True)
+spring = radio(bind=whichfigure, text='Spring', name='figures', checked=True)
+ball = radio(bind=whichfigure, text='Ball', name='figures', checked=True)
+
+build = button (bind = buildorder, text = "build")
 
 #Main loop
 while True:
@@ -68,33 +95,75 @@ while True:
         
         #Printer controls
         key = keysdown()
-        if 'up' in key:
-                if support_z.pos.z < 4.65:
-                        support_z.pos.z += 0.1
-                        crane.pos.z += 0.1
-                        head.pos.z += 0.1
-        elif 'down' in key:
-                if support_z.pos.z > -4.65:
-                        support_z.pos.z += -0.1 
-                        crane.pos.z += -0.1
-                        head.pos.z += -0.1
-        if 'left' in key:
-                if support_x.pos.x < 4.65:
-                        support_x.pos.x += 0.1
-                        crane.pos.x += 0.1
-                        head.pos.x += 0.1
-        elif 'right' in key:
-                if support_x.pos.x > -4.65:
-                        support_x.pos.x += -0.1 
-                        crane.pos.x += -0.1
-                        head.pos.x += -0.1
-        if 'w' in key:
-                if head.pos.y < 4.6:
-                        crane.pos.y += 0.1
-                        head.pos.y += 0.1
-        elif 's' in key:
-                if head.pos.y >= 0.1:
-                        crane.pos.y += -0.1
-                        head.pos.y += -0.1
-        if 'q' in key:
-                break
+        if key:
+                if 'up' in key:
+                        if support_z.pos.z < 4.65:
+                                support_z.pos.z += 0.1
+                                crane.pos.z += 0.1
+                                head.pos.z += 0.1
+                elif 'down' in key:
+                        if support_z.pos.z > -4.65:
+                                support_z.pos.z += -0.1 
+                                crane.pos.z += -0.1
+                                head.pos.z += -0.1
+                if 'left' in key:
+                        if support_x.pos.x < 4.65:
+                                support_x.pos.x += 0.1
+                                crane.pos.x += 0.1
+                                head.pos.x += 0.1
+                elif 'right' in key:
+                        if support_x.pos.x > -4.65:
+                                support_x.pos.x += -0.1 
+                                crane.pos.x += -0.1
+                                head.pos.x += -0.1
+                if 'w' in key:
+                        if head.pos.y < 4.6:
+                                crane.pos.y += 0.1
+                                head.pos.y += 0.1
+                elif 's' in key:
+                        if head.pos.y > 0.2:
+                                crane.pos.y += -0.1
+                                head.pos.y += -0.1
+        
+        #Centering printer head
+        if ifcenter == True:
+                if head.pos.y > 0.2:
+                        crane.pos.y += -0.05
+                        head.pos.y += -0.05
+                if head.pos.z > 0:
+                        support_z.pos.z += -0.05
+                        crane.pos.z += -0.05
+                        head.pos.z += -0.05
+                elif head.pos.z < 0:
+                        support_z.pos.z += 0.05
+                        crane.pos.z += 0.05
+                        head.pos.z += 0.05
+                if head.pos.x > 0:
+                        support_x.pos.x += -0.05 
+                        crane.pos.x += -0.05
+                        head.pos.x += -0.05
+                elif head.pos.x < 0:
+                        support_x.pos.x += 0.05
+                        crane.pos.x += 0.05
+                        head.pos.x += 0.05
+                if -0.1 < head.pos.x < 0.1 and -0.1 < head.pos.z < 0.1 and head.pos.y < 0.3:
+                        canprint = True
+                        ifcenter = False
+                        head.make_trail = True
+        #Start printing
+        if canprint == True:
+                if figurechoice == 0: #Rectangle
+                        support_x.pos.x += 0.05
+                        crane.pos.x += 0.05
+                        head.pos.x += 0.05
+                        i += 1
+                        if i == 10:
+                                canprint = False
+                                head.make_trail = False
+                                i = 0
+                                
+                
+                        
+                        
+                
+        
