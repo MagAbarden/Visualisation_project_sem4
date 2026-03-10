@@ -1,5 +1,5 @@
 # Visualisation_project_sem4
-|**Narzędzie**|**Licencja**|
+|**Narzędzie**nie pogrubione|**Licencja**|
 |-|-|
 |Python (>3.8.6)|PSF License Version 2|
 |OpenCV (>4.5.0)|Apache License 2.0|
