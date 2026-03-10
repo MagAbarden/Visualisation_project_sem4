@@ -1,7 +1,6 @@
 # Visualisation_project_sem4
-|-----------|-----------|
-| A         | B         |
-| C         | D         |
+|**Narzędzie**|**Licencja**|
+|-|-|
 |Python (>3.8.6)|PSF License Version 2|
 |OpenCV (>4.5.0)|Apache License 2.0|
 |CARLA (0.9.16)|MIT License|
