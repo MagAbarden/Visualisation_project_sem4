@@ -1,4 +1,8 @@
 # Visualisation_project_sem4
+| Kolumna 1 | Kolumna 2 |
+|-----------|-----------|
+| A         | B         |
+| C         | D         |
 |Python (>3.8.6)|PSF License Version 2|
 |OpenCV (>4.5.0)|Apache License 2.0|
 |CARLA (0.9.16)|MIT License|
